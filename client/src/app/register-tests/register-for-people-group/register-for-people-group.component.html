@@ -1,0 +1,52 @@
+<ng-container *ngIf="isLoading; else content">
+  <h2>Lade {{ groupId }} für {{ testDate }}</h2>
+</ng-container>
+<ng-template #content>
+  <h2>Tests für {{ data.group.name }} am {{ testDate }}</h2>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th></th>
+        <th>
+          <button mat-button (click)="unknownToNegativeResult()">
+            Unbekannt -> Negativ
+          </button>
+        </th>
+        <th>
+          <button mat-button (click)="unknownToOrigin('school')">
+            Unbekannt -> Schule
+          </button>
+        </th>
+      </tr>
+      <tr>
+        <th>Vorname</th>
+        <th>Nachname</th>
+        <th>Testergebnis</th>
+        <th>Testherkunft</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of data.results">
+        <td>{{ t.person.firstName }}</td>
+        <td>{{ t.person.lastName }}</td>
+        <td>
+          <app-select-test-result
+            [testResult]="t.result"
+          ></app-select-test-result>
+        </td>
+        <td>
+          <app-select-test-origin
+            [testResult]="t.result"
+          ></app-select-test-origin>
+        </td>
+        <td>
+          <button mat-button (click)="deleteTestResult(t.person.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>
