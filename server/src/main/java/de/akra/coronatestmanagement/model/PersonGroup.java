@@ -1,16 +1,14 @@
 package de.akra.coronatestmanagement.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.UUID;
+import javax.persistence.*;
+import java.util.*;
 
 /**
  * A group of people that will usually be tested together. This class is not simply
  * named `GROUP` because apparently that clashes with the H2 SQL syntax.
  */
 @Entity
+@NamedEntityGraph(name = "PersonGroup.people", attributeNodes = @NamedAttributeNode("people"))
 public class PersonGroup {
     @Id
     @GeneratedValue
@@ -18,6 +16,9 @@ public class PersonGroup {
     private UUID id;
 
     private String name;
+
+    @OneToMany(mappedBy = "personGroup")
+    private Set<Person> people = new HashSet<>();
 
     protected PersonGroup() {
 
@@ -37,9 +38,10 @@ public class PersonGroup {
 
     @Override
     public String toString() {
-        return "PersonGroup{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return "PersonGroup{" + "id=" + id + ", name='" + name + '\'' + '}';
+    }
+
+    public Set<Person> getPeople() {
+        return people;
     }
 }

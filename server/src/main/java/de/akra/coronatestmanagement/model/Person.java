@@ -18,7 +18,7 @@ public class Person {
     private String lastName;
 
     @ManyToOne()
-    private PersonGroup group;
+    private PersonGroup personGroup;
 
     protected Person() {
     }
@@ -27,10 +27,10 @@ public class Person {
         this(firstName, lastName, null);
     }
 
-    public Person(String firstName, String lastName, PersonGroup group) {
+    public Person(String firstName, String lastName, PersonGroup personGroup) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.group = group;
+        this.personGroup = personGroup;
     }
 
     public UUID getId() {
@@ -51,7 +51,6 @@ public class Person {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", group=" + group +
                 '}';
     }
 }
