@@ -1,5 +1,7 @@
 package de.akra.coronatestmanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -18,7 +20,7 @@ public class PersonGroup {
     private String name;
 
     @OneToMany(mappedBy = "personGroup")
-    private Set<Person> people = new HashSet<>();
+    private Set<Person> people;
 
     protected PersonGroup() {
 
@@ -34,6 +36,14 @@ public class PersonGroup {
 
     public String getName() {
         return name;
+    }
+
+    public Integer getCount() {
+        if (people != null) {
+            return people.size();
+        } else {
+            return null;
+        }
     }
 
     @Override

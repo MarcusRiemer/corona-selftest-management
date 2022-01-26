@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TestResultDescription } from 'src/app/core-services/group-data.service';
+import {
+  GroupDataService,
+  TestResultDescription,
+} from 'src/app/core-services/group-data.service';
 import { formatTestDate } from 'src/app/core-services/test-date';
 
 @Component({
@@ -7,18 +10,25 @@ import { formatTestDate } from 'src/app/core-services/test-date';
   templateUrl: './select-test-result.component.html',
   styleUrls: ['./select-test-result.component.scss'],
 })
-export class SelectTestResultComponent implements OnInit {
+export class SelectTestResultComponent {
   @Input()
   testResult: TestResultDescription = {
     id: '-1',
-    state: { origin: 'unknown', result: 'unknown' },
+    state: { origin: 'UNKNOWN', result: 'UNKNOWN' },
     date: formatTestDate('1970', '01', '01'),
   };
 
   @Input()
   readOnly = false;
+  updateInProgress = false;
 
-  constructor() {}
+  constructor(private readonly groupData: GroupDataService) {}
 
-  ngOnInit(): void {}
+  async onChange(evt: unknown) {
+    if (!this.readOnly) {
+      this.updateInProgress = true;
+      await this.groupData.setTestState(this.testResult, 'result');
+      this.updateInProgress = false;
+    }
+  }
 }

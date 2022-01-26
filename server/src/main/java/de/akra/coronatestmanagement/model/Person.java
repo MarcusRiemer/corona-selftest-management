@@ -1,6 +1,7 @@
 package de.akra.coronatestmanagement.model;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -19,6 +20,9 @@ public class Person {
 
     @ManyToOne()
     private PersonGroup personGroup;
+
+    @OneToMany(mappedBy = "person")
+    private Set<PersonTest> tests;
 
     protected Person() {
     }

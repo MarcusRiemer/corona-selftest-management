@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { formatTestDate, TestDate } from './test-date';
+import { HttpClient } from '@angular/common/http';
+import { TestDate } from './test-date';
+import { firstValueFrom } from 'rxjs';
 
 export interface PersonDescription {
   id: string;
@@ -10,12 +12,13 @@ export interface PersonDescription {
 export interface PeopleGroupListDescription {
   id: string;
   name: string;
-  count: number;
+  personCount: number;
+  testCount: number;
 }
 
 export interface TestState {
-  origin: 'school' | 'thirdParty' | 'selfDisclosure' | 'unknown';
-  result: 'positive' | 'negative' | 'unknown';
+  origin: 'SCHOOL' | 'THIRD_PARTY' | 'SELF_DISCLOSURE' | 'UNKNOWN';
+  result: 'POSITIVE' | 'NEGATIVE' | 'UNKNOWN';
 }
 
 export interface TestResultDescription {
@@ -39,83 +42,46 @@ export interface TestResultsGroupListDescription {
   providedIn: 'root',
 })
 export class GroupDataService {
-  constructor() {}
+  constructor(private readonly http: HttpClient) {}
 
   async fetchAvailableGroups(): Promise<PeopleGroupListDescription[]> {
-    return [
-      {
-        id: '1',
-        name: '7a',
-        count: 22,
-      },
-      {
-        id: '2',
-        name: '7b',
-        count: 25,
-      },
-      {
-        id: '3',
-        name: '7c',
-        count: 21,
-      },
-    ];
+    return firstValueFrom(
+      this.http.get<PeopleGroupListDescription[]>('api/tests/groupsToday')
+    );
   }
 
   async createGroupTestSeries(
     groupId: string,
-    date: TestDate
+    testDate: TestDate
   ): Promise<boolean> {
-    return true;
+    return firstValueFrom(
+      this.http.post<boolean>('api/tests/createForGroup', { groupId, testDate })
+    );
   }
 
   async getGroupTestSeries(
     groupId: string,
     date: TestDate
   ): Promise<TestResultsGroupListDescription> {
-    return {
-      date: date,
-      group: {
-        id: '1',
-        name: '7a',
-      },
-      results: [
-        {
-          person: {
-            id: '1',
-            firstName: 'Arnold',
-            lastName: 'Erster',
-          },
-          result: {
-            id: '1001',
-            state: { origin: 'unknown', result: 'unknown' },
-            date,
-          },
-        },
-        {
-          person: {
-            id: '2',
-            firstName: 'Berta',
-            lastName: 'Zweite',
-          },
-          result: {
-            id: '1002',
-            state: { origin: 'unknown', result: 'unknown' },
-            date,
-          },
-        },
-        {
-          person: {
-            id: '3',
-            firstName: 'Cäsar',
-            lastName: 'Dritter',
-          },
-          result: {
-            id: '1003',
-            state: { origin: 'unknown', result: 'unknown' },
-            date,
-          },
-        },
-      ],
+    return firstValueFrom(
+      this.http.get<TestResultsGroupListDescription>(
+        `api/tests/forGroup/${groupId}`
+      )
+    );
+  }
+
+  async setTestState(
+    test: TestResultDescription,
+    changedProp: keyof TestResultDescription['state']
+  ) {
+    const change = {
+      testId: test.id,
+      changedProp,
+      value: test.state[changedProp],
     };
+
+    return firstValueFrom(
+      this.http.post<boolean>(`api/tests/update`, [change])
+    );
   }
 }

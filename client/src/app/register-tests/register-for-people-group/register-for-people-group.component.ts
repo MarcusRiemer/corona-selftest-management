@@ -26,6 +26,8 @@ export class RegisterForPeopleGroupComponent implements OnInit, OnDestroy {
     group: {
       id: '-1',
       name: 'Missing Data',
+      personCount: -1,
+      testCount: -1,
     },
     results: [],
   };
@@ -64,13 +66,13 @@ export class RegisterForPeopleGroupComponent implements OnInit, OnDestroy {
 
   unknownToNegativeResult() {
     this.data.results
-      .filter((r) => r.result.state.result === 'unknown')
-      .forEach((r) => (r.result.state.result = 'negative'));
+      .filter((r) => r.result.state.result === 'UNKNOWN')
+      .forEach((r) => (r.result.state.result = 'NEGATIVE'));
   }
 
   unknownToOrigin(origin: TestState['origin']) {
     this.data.results
-      .filter((r) => r.result.state.origin === 'unknown')
+      .filter((r) => r.result.state.origin === 'UNKNOWN')
       .forEach((r) => (r.result.state.origin = origin));
   }
 

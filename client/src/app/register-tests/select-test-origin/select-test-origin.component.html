@@ -1,5 +1,11 @@
-<mat-radio-group [(ngModel)]="testResult.state.origin">
-  <mat-radio-button [value]="'school'">Schule</mat-radio-button>
-  <mat-radio-button [value]="'selfDisclosure'">Selbstauskunft</mat-radio-button>
-  <mat-radio-button [value]="'thirdParty'">Dritte Stelle</mat-radio-button>
+<mat-radio-group
+  [(ngModel)]="testResult.state.origin"
+  (change)="onChange($event)"
+  [disabled]="readOnly || updateInProgress"
+>
+  <mat-radio-button [value]="'SCHOOL'">Schule</mat-radio-button>
+  <mat-radio-button [value]="'SELF_DISCLOSURE'"
+    >Selbstauskunft</mat-radio-button
+  >
+  <mat-radio-button [value]="'THIRD_PARTY'">Dritte Stelle</mat-radio-button>
 </mat-radio-group>

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -19,9 +20,7 @@ const ANGULAR_MATERIAL_MODULES = [
   MatListModule,
 ];
 
-const APP_MODULES = [
-  RegisterTestsModule
-]
+const APP_MODULES = [RegisterTestsModule];
 
 @NgModule({
   declarations: [AppComponent, AboutComponent],
@@ -29,8 +28,9 @@ const APP_MODULES = [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     ...ANGULAR_MATERIAL_MODULES,
-    ...APP_MODULES
+    ...APP_MODULES,
   ],
   providers: [],
   bootstrap: [AppComponent],

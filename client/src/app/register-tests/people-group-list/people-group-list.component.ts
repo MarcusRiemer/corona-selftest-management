@@ -16,7 +16,8 @@ export class PeopleGroupListComponent {
   group: PeopleGroupListDescription = {
     name: 'Laden ...',
     id: '-1',
-    count: 0,
+    personCount: 0,
+    testCount: 0,
   };
 
   private readonly today = todayTestDate();
