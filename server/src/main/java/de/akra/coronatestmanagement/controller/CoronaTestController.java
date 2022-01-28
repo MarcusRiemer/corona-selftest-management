@@ -82,6 +82,12 @@ public class CoronaTestController {
         return true;
     }
 
+    @DeleteMapping("/{testId}")
+    public boolean delete(@PathVariable UUID testId) {
+        personTestRepository.deleteById(testId);
+        return true;
+    }
+
     public record UpdateTestParams(UUID testId, String changedProp, String value) {}
 
     public record CreateGroupTestSeriesParams(UUID groupId, String testDate) {

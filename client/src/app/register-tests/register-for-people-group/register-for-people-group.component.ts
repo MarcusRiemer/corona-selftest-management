@@ -67,7 +67,7 @@ export class RegisterForPeopleGroupComponent implements OnInit, OnDestroy {
     this.subscriptions = [];
   }
 
-  unknownToNegativeResult() {
+  async unknownToNegativeResult() {
     this.isDoingGlobalOperation = true;
 
     const affected = this.data.results.filter(
@@ -79,12 +79,12 @@ export class RegisterForPeopleGroupComponent implements OnInit, OnDestroy {
       test: t.result,
       changedProp: 'result',
     }));
-    this.groupDate.setTestState(...changes);
+    await this.groupDate.setTestState(...changes);
 
     this.isDoingGlobalOperation = false;
   }
 
-  unknownToOrigin(origin: TestState['origin']) {
+  async unknownToOrigin(origin: TestState['origin']) {
     this.isDoingGlobalOperation = true;
 
     const affected = this.data.results.filter(
@@ -97,14 +97,16 @@ export class RegisterForPeopleGroupComponent implements OnInit, OnDestroy {
       test: t.result,
       changedProp: 'origin',
     }));
-    this.groupDate.setTestState(...changes);
+    await this.groupDate.setTestState(...changes);
 
     this.isDoingGlobalOperation = false;
   }
 
-  deleteTestResult(personId: string) {
-    this.data.results = this.data.results.filter(
-      (r) => r.person.id !== personId
-    );
+  async deleteTestResult(testId: string) {
+    if (await this.groupDate.deleteTest(testId)) {
+      this.data.results = this.data.results.filter(
+        (r) => r.result.id !== testId
+      );
+    }
   }
 }

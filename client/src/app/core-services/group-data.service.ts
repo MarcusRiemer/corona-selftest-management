@@ -86,4 +86,8 @@ export class GroupDataService {
       this.http.post<boolean>(`api/tests/update`, serverChanges)
     );
   }
+
+  async deleteTest(testId: string) {
+    return firstValueFrom(this.http.delete<boolean>(`api/tests/${testId}`));
+  }
 }
