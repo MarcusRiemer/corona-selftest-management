@@ -28,6 +28,9 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+// To make deployment as easy as possible (specifically: "Run this jar
+// and be done"), the frontend application is compiled and placed in the
+// jar.
 task buildFrontend(type: Exec) {
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		throw new GradleException('Sorry, automatic bundling is not supported on Windows')
@@ -35,7 +38,6 @@ task buildFrontend(type: Exec) {
 		def resDir = '../server/src/main/resources/static/'
 		commandLine 'mkdir', '-p', resDir
 		commandLine 'sh', '-c', 'cd ../client && npm run-script build'
-		// cp -r dist/corona-school-reporting-client/* ${resDir}
 		copy {
 			from '../client/dist/corona-school-reporting-client/'
 			into resDir
@@ -43,5 +45,4 @@ task buildFrontend(type: Exec) {
 	}
 }
 
-build.dependsOn buildFrontend
 bootJar.dependsOn buildFrontend
