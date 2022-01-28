@@ -27,7 +27,10 @@ export class SelectTestResultComponent {
   async onChange(evt: unknown) {
     if (!this.readOnly) {
       this.updateInProgress = true;
-      await this.groupData.setTestState(this.testResult, 'result');
+      await this.groupData.setTestState({
+        test: this.testResult,
+        changedProp: 'result',
+      });
       this.updateInProgress = false;
     }
   }

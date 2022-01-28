@@ -9,12 +9,20 @@
         <th></th>
         <th></th>
         <th>
-          <button mat-button (click)="unknownToNegativeResult()">
+          <button
+            mat-button
+            (click)="unknownToNegativeResult()"
+            [disabled]="isDoingGlobalOperation"
+          >
             Unbekannt -> Negativ
           </button>
         </th>
         <th>
-          <button mat-button (click)="unknownToOrigin('SCHOOL')">
+          <button
+            mat-button
+            (click)="unknownToOrigin('SCHOOL')"
+            [disabled]="isDoingGlobalOperation"
+          >
             Unbekannt -> Schule
           </button>
         </th>
@@ -33,12 +41,14 @@
         <td>{{ t.person.lastName }}</td>
         <td>
           <app-select-test-result
-            [testResult]="t.result"
+              [testResult]="t.result"
+              [readOnly]="isDoingGlobalOperation"
           ></app-select-test-result>
         </td>
         <td>
           <app-select-test-origin
-            [testResult]="t.result"
+              [testResult]="t.result"
+              [readOnly]="isDoingGlobalOperation"
           ></app-select-test-origin>
         </td>
         <td>

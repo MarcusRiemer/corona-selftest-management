@@ -28,7 +28,10 @@ export class SelectTestOriginComponent {
   async onChange(evt: unknown) {
     if (!this.readOnly) {
       this.updateInProgress = true;
-      await this.groupData.setTestState(this.testResult, 'origin');
+      await this.groupData.setTestState({
+        test: this.testResult,
+        changedProp: 'origin',
+      });
       this.updateInProgress = false;
     }
   }

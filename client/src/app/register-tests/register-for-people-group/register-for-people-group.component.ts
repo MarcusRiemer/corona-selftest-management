@@ -5,6 +5,7 @@ import {
   GroupDataService,
   TestResultsGroupListDescription,
   TestState,
+  TestStateChangedParams,
 } from 'src/app/core-services/group-data.service';
 import {
   formatTestDate,
@@ -33,6 +34,8 @@ export class RegisterForPeopleGroupComponent implements OnInit, OnDestroy {
   };
 
   isLoading = true;
+
+  isDoingGlobalOperation = false;
 
   private subscriptions: Subscription[] = [];
 
@@ -65,15 +68,38 @@ export class RegisterForPeopleGroupComponent implements OnInit, OnDestroy {
   }
 
   unknownToNegativeResult() {
-    this.data.results
-      .filter((r) => r.result.state.result === 'UNKNOWN')
-      .forEach((r) => (r.result.state.result = 'NEGATIVE'));
+    this.isDoingGlobalOperation = true;
+
+    const affected = this.data.results.filter(
+      (r) => r.result.state.result === 'UNKNOWN'
+    );
+    affected.forEach((r) => (r.result.state.result = 'NEGATIVE'));
+
+    const changes: TestStateChangedParams[] = affected.map((t) => ({
+      test: t.result,
+      changedProp: 'result',
+    }));
+    this.groupDate.setTestState(...changes);
+
+    this.isDoingGlobalOperation = false;
   }
 
   unknownToOrigin(origin: TestState['origin']) {
-    this.data.results
-      .filter((r) => r.result.state.origin === 'UNKNOWN')
-      .forEach((r) => (r.result.state.origin = origin));
+    this.isDoingGlobalOperation = true;
+
+    const affected = this.data.results.filter(
+      (r) => r.result.state.origin === 'UNKNOWN'
+    );
+
+    affected.forEach((r) => (r.result.state.origin = origin));
+
+    const changes: TestStateChangedParams[] = affected.map((t) => ({
+      test: t.result,
+      changedProp: 'origin',
+    }));
+    this.groupDate.setTestState(...changes);
+
+    this.isDoingGlobalOperation = false;
   }
 
   deleteTestResult(personId: string) {
