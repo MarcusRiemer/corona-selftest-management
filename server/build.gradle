@@ -1,7 +1,7 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.3'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.6.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
 }
 
 group = 'de.akra'
@@ -9,40 +9,51 @@ version = '0.0.1'
 sourceCompatibility = '17'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-	implementation 'com.github.javafaker:javafaker:1.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'com.github.javafaker:javafaker:1.0.2'
 
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.h2database:h2'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 // To make deployment as easy as possible (specifically: "Run this jar
 // and be done"), the frontend application is compiled and placed in the
 // jar.
-task buildFrontend(type: Exec) {
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		throw new GradleException('Sorry, automatic bundling is not supported on Windows')
-	} else {
-		def resDir = '../server/src/main/resources/static/'
-		commandLine 'mkdir', '-p', resDir
-		commandLine 'sh', '-c', 'cd ../client && npm run-script build'
-		copy {
-			from '../client/dist/corona-school-reporting-client/'
-			into resDir
-		}
-	}
+task buildFrontend() {
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        throw new GradleException('Sorry, automatic bundling is not supported on Windows')
+    } else {
+        def resDir = '../server/src/main/resources/static/'
+        // Ensure that target directory exists
+        exec { commandLine 'mkdir', '-p', resDir }
+
+        // Just in case: Remove everything that was compiled before
+        delete fileTree(resDir) {}
+
+        exec {
+            executable 'npm'
+            args 'run-script', 'build'
+            workingDir '../client'
+        }
+        copy {
+            from '../client/dist/corona-school-reporting-client/'
+            into resDir
+        }
+
+        assert file(resDir + 'index.html').exists()
+    }
 }
 
 bootJar.dependsOn buildFrontend
