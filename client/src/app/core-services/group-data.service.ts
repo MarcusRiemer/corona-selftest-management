@@ -38,6 +38,11 @@ export interface TestResultsGroupListDescription {
   results: PersonTestResultDescription[];
 }
 
+export interface TestStateChangedParams {
+  test: TestResultDescription;
+  changedProp: keyof TestResultDescription['state'];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -70,18 +75,15 @@ export class GroupDataService {
     );
   }
 
-  async setTestState(
-    test: TestResultDescription,
-    changedProp: keyof TestResultDescription['state']
-  ) {
-    const change = {
-      testId: test.id,
-      changedProp,
-      value: test.state[changedProp],
-    };
+  async setTestState(...changes: TestStateChangedParams[]) {
+    const serverChanges = changes.map((c) => ({
+      testId: c.test.id,
+      changedProp: c.changedProp,
+      value: c.test.state[c.changedProp],
+    }));
 
     return firstValueFrom(
-      this.http.post<boolean>(`api/tests/update`, [change])
+      this.http.post<boolean>(`api/tests/update`, serverChanges)
     );
   }
 }
