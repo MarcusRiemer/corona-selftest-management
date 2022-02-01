@@ -28,7 +28,7 @@ public class CoronaTestManagementApplication {
     public CommandLineRunner demo(PersonRepository personRepository, PersonGroupRepository groupRepository) {
         return (args) -> {
             // Basic seeding required?
-            if (groupRepository.count() == 0) {
+            if (false && groupRepository.count() == 0) {
                 Faker faker = new Faker(Locale.GERMAN);
                 Random random = new Random();
 

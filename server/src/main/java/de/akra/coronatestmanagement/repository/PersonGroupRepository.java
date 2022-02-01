@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public interface PersonGroupRepository extends JpaRepository<PersonGroup, UUID> {
@@ -25,6 +26,10 @@ public interface PersonGroupRepository extends JpaRepository<PersonGroup, UUID> 
     List<GroupNumTests> findGroupWithNumTestsByDay(
             @Param("date") LocalDate date
     );
+
+    @Query("SELECT g FROM PersonGroup g WHERE g.name IN :names")
+    List<PersonGroup> findAllByName(@Param("names") Set<String> names);
+
 
     public interface GroupNumTests {
         PersonGroup getGroup();

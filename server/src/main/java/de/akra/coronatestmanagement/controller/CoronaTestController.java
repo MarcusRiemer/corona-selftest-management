@@ -82,11 +82,6 @@ public class CoronaTestController {
      */
     @PostMapping("/update")
     public boolean update(@RequestBody List<UpdateTestParams> params) {
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException ie) {
-
-        }
         for(var p: params) {
             PersonTest t = personTestRepository.findById(p.testId).orElseThrow();
             if (p.changedProp.equals("origin")) {

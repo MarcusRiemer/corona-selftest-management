@@ -1,0 +1,43 @@
+<h2>Personen importieren</h2>
+<p>Es ist möglich massenhaft neue Personen über einen CSV-Import anzulegen.</p>
+
+<form #form (ngSubmit)="onImport(form)">
+  <input name="csvFile" type="file" [disabled]="inProgress" />
+  <button mat-button type="submit" [disabled]="inProgress">Importieren</button>
+</form>
+
+<div *ngIf="lastUploadResult">
+  <h3>Import-Ergebnis</h3>
+  <table>
+    <tr>
+      <td>Anzahl Datensätze:</td>
+      <td>{{ lastUploadResult.numLines }}</td>
+    </tr>
+    <tr>
+      <td>Fehlerhafte Datensätze:</td>
+      <td>{{ lastUploadResult.errors.length }}</td>
+    </tr>
+    <tr>
+      <td>Übersprungene Datensätze:</td>
+      <td>{{ lastUploadResult.skipped.length }}</td>
+    </tr>
+    <tr>
+      <td>Neue Datensätze:</td>
+      <td>
+        {{
+          lastUploadResult.numLines -
+            lastUploadResult.errors.length -
+            lastUploadResult.skipped.length
+        }}
+      </td>
+    </tr>
+    <tr>
+      <td>Neue Gruppen</td>
+      <td *ngIf="lastUploadResult.newGroups.length > 0">
+        {{ lastUploadResult.newGroups.join(", ") }}
+      </td>
+      <td *ngIf="lastUploadResult.newGroups.length === 0">Keine</td>
+    </tr>
+  </table>
+  <p></p>
+</div>
