@@ -41,3 +41,42 @@
   </table>
   <p></p>
 </div>
+
+<h3>Import-Dateiformat</h3>
+<p>
+  Datei mit UTF-8 Kodierung mit Komma-separierte Werte, die erste Zeile enthält die Namen der erforderlichen
+  Spalten.
+</p>
+
+<dl>
+  <dt>firstName (<code>Zeichenkette</code>)</dt>
+  <dd>Vorname</dd>
+
+  <dt>lastName (<code>Zeichenkette</code>)</dt>
+  <dd>Nachmame</dd>
+
+  <dt class="not-implemented">vaccinated (<code>Datum</code>, wird aktuell ignoriert)</dt>
+  <dd>Datum der letzten relevanten Impfung</dd>
+
+  <dt class="not-implemented">recovered (<code>Datum</code>, wird aktuell ignoriert)</dt>
+  <dd>Genesen bis zu diesem Datum</dd>
+
+  <dt>group (<code>Zeichenkette</code>)</dt>
+  <dd>Name der Klassen</dd>
+</dl>
+
+<h4>Beispiel</h4>
+<p>Unten stehender Datensatz enthält die folgenden Personen</p>
+<ul>
+  <li>Albert Erster, <span class="not-implemented">geimpft am 1.1.2020, nicht genesen</span>, Gruppe 1c</li>
+  <li>Berta Zweite, <span class="not-implemented">nicht geimpft, genesen bis 1.2.2020</span>, Gruppe 1b</li>
+  <li>Cäsar Dritter, <span class="not-implemented">geimpft am 1.3.2020, genesen bis 1.4.2020</span>, Gruppe 7a</li>
+  <li>Erwin Letzter, <span class="not-implemented">nicht geimpft, nicht genesen</span>, Gruppe 7a</li>
+</ul>
+<pre><code>
+firstName,lastName,vaccinated,recovered,group
+Albert,Erster,1.1.2020,,1c
+Berta,Zweite,,1.2.2020,1b
+Cäsar,Dritter,1.3.2020,1.4.2020,7a
+Erwin,Letzter,,,7a
+</code></pre>
