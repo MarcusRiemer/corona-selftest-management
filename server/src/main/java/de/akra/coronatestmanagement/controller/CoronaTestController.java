@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Responsible for all data retrieval and manipulation that can be considered test
+ * management.
+ */
 @RestController
 @RequestMapping("/api/tests")
 public class CoronaTestController {
@@ -29,6 +33,9 @@ public class CoronaTestController {
         this.personTestRepository = personTestRepository;
     }
 
+    /**
+     * Dashboard data for all groups that may have a test today.
+     */
     @GetMapping("/groupsToday")
     public List<PeopleGroupListDescription> groupsToday() {
         var d = LocalDate.now();
@@ -39,6 +46,9 @@ public class CoronaTestController {
                 .toList();
     }
 
+    /**
+     * Detailed test data for a specific group.
+     */
     @GetMapping("/forGroup/{groupId}")
     public TestResultsGroupList forGroup(@PathVariable UUID groupId) {
         var d = LocalDate.now();
@@ -48,6 +58,9 @@ public class CoronaTestController {
         return new TestResultsGroupList(d, g, tests.stream().map(t -> new PersonTestResultDescription(t.getPerson(), t)).toList());
     }
 
+    /**
+     * Tests for people are always explicitly created with "UNKNOWN" values.
+     */
     @PostMapping("/createForGroup")
     public boolean createForGroup(@RequestBody CreateGroupTestSeriesParams params) {
         var date = params.getTestDate();
@@ -62,6 +75,11 @@ public class CoronaTestController {
         return true;
     }
 
+    /**
+     * Update multiple test cases at once. In many cases the client will send a list
+     * with only a single item but having a batch option as default eases the few
+     * vital batch operations that are actually required.
+     */
     @PostMapping("/update")
     public boolean update(@RequestBody List<UpdateTestParams> params) {
         try {

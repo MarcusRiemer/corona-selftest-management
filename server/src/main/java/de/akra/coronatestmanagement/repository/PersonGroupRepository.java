@@ -12,7 +12,9 @@ import java.util.UUID;
 public interface PersonGroupRepository extends JpaRepository<PersonGroup, UUID> {
 
     @Query("""
-              SELECT g AS group, COUNT(t.id) as numTests
+              SELECT 
+                g AS group, 
+                COUNT(t.id) as numTests
               FROM PersonGroup g 
                 LEFT OUTER JOIN g.people p
                 LEFT OUTER JOIN p.tests t

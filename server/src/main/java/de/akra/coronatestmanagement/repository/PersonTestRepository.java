@@ -15,4 +15,17 @@ public interface PersonTestRepository extends JpaRepository<PersonTest, UUID> {
             @Param("groupId") UUID groupId,
             @Param("date") LocalDate date
     );
+
+    @Query("""
+           SELECT g
+           FROM PersonTest t 
+             JOIN t.person p
+             JOIN p.personGroup g
+           WHERE t.date = :date 
+             AND t.result = 'POSITIVE'
+           GROUP BY g.id
+           """)
+    int countPositiveTests(
+            @Param("date") LocalDate date
+    );
 }
