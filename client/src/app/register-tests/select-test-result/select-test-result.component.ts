@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {
   GroupDataService,
   TestResultDescription,
@@ -24,7 +24,7 @@ export class SelectTestResultComponent {
 
   constructor(private readonly groupData: GroupDataService) {}
 
-  async onChange(evt: unknown) {
+  async onChange() {
     if (!this.readOnly) {
       this.updateInProgress = true;
       await this.groupData.setTestState({

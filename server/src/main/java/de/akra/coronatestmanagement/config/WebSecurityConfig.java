@@ -1,4 +1,4 @@
-package de.akra.coronatestmanagement;
+package de.akra.coronatestmanagement.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

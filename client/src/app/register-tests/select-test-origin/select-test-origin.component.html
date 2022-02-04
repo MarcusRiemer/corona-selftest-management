@@ -1,6 +1,6 @@
 <mat-radio-group
   [(ngModel)]="testResult.state.origin"
-  (change)="onChange($event)"
+  (change)="onChange()"
   [disabled]="readOnly || updateInProgress"
 >
   <mat-radio-button [value]="'SCHOOL'">Schule</mat-radio-button>

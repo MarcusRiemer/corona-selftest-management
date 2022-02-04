@@ -25,7 +25,7 @@ export class SelectTestOriginComponent {
 
   constructor(private readonly groupData: GroupDataService) {}
 
-  async onChange(evt: unknown) {
+  async onChange() {
     if (!this.readOnly) {
       this.updateInProgress = true;
       await this.groupData.setTestState({

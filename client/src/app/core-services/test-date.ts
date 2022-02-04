@@ -1,4 +1,4 @@
-import { ParamMap, Params } from '@angular/router';
+import { ParamMap } from '@angular/router';
 
 export type TestDay =
   | '01'

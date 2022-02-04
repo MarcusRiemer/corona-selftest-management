@@ -2,7 +2,7 @@ package de.akra.coronatestmanagement.controller;
 
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import de.akra.coronatestmanagement.WebSecurityConfig;
+import de.akra.coronatestmanagement.config.WebSecurityConfig;
 import de.akra.coronatestmanagement.model.Person;
 import de.akra.coronatestmanagement.model.PersonGroup;
 import de.akra.coronatestmanagement.repository.PersonGroupRepository;

@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 export interface LoginState {
   isLoggedIn: boolean;
-  roles: string[];
+  roles: Set<string>;
 }
 
 const ROLE_ANONYMOUS = 'ROLE_ANONYMOUS';
@@ -22,7 +22,7 @@ export class UserService {
 
   public isLoggedIn = false;
 
-  public roles: string[] = [];
+  public roles = new Set<string>();
 
   /**
    * Attempts to login with the given credentials
@@ -52,9 +52,10 @@ export class UserService {
    * Checks what the server knows about our session.
    */
   async fetchLoginState(): Promise<LoginState> {
-    this.roles = await this.fetchCurrentRoles();
+    const response = await this.fetchCurrentRoles();
+    this.roles = new Set<string>(response);
 
-    if (this.roles.length === 1 && this.roles[0] === ROLE_ANONYMOUS) {
+    if (this.roles.size === 1 && this.roles.has(ROLE_ANONYMOUS)) {
       this.resetStateLoggedOut();
     } else {
       this.isLoggedIn = true;
@@ -73,18 +74,22 @@ export class UserService {
     return { isLoggedIn: this.isLoggedIn, roles: this.roles };
   }
 
-  private async fetchCurrentRoles(): Promise<string[]> {
+  hasRole(roleName: string) {
+    return this.roles.has(roleName);
+  }
+
+  private async fetchCurrentRoles(): Promise<Set<string>> {
     try {
-      return await firstValueFrom(
-        this.http.get<string[]>('/api/session/roles')
+      return new Set<string>(
+        await firstValueFrom(this.http.get<string[]>('/api/session/roles'))
       );
     } catch (e) {
-      return [];
+      return new Set<string>();
     }
   }
 
   private resetStateLoggedOut() {
     this.isLoggedIn = false;
-    this.roles = [];
+    this.roles = new Set<string>();
   }
 }

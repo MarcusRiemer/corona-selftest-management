@@ -12,7 +12,7 @@ import { LoginState, UserService } from '../user.service';
 export class LoginStateComponent implements OnInit {
   state: LoginState = {
     isLoggedIn: false,
-    roles: [],
+    roles: new Set<string>(),
   };
 
   constructor(

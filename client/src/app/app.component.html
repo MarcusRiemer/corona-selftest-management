@@ -11,9 +11,24 @@
   <mat-drawer #drawer mode="side" opened>
     <mat-nav-list>
       <a mat-list-item [routerLink]="'/'">Hauptseite</a>
-      <a mat-list-item [routerLink]="'/register-test'">Tests erfassen</a>
-      <a mat-list-item [routerLink]="'/analysis'">Auswertung</a>
-      <a mat-list-item [routerLink]="'/administration'">Administration</a>
+      <a
+        *ngIf="hasRole('ROLE_REPORTER')"
+        mat-list-item
+        [routerLink]="'/register-test'"
+        >Tests erfassen</a
+      >
+      <a
+        *ngIf="hasRole('ROLE_ANALYST')"
+        mat-list-item
+        [routerLink]="'/analysis'"
+        >Auswertung</a
+      >
+      <a
+        *ngIf="hasRole('ROLE_ADMIN')"
+        mat-list-item
+        [routerLink]="'/administration'"
+        >Administration</a
+      >
     </mat-nav-list>
   </mat-drawer>
 

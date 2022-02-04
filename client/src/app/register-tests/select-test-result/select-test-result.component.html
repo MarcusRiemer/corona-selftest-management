@@ -1,6 +1,6 @@
 <mat-radio-group
   [(ngModel)]="testResult.state.result"
-  (change)="onChange($event)"
+  (change)="onChange()"
   [disabled]="readOnly || updateInProgress"
 >
   <mat-radio-button [value]="'POSITIVE'">Positiv</mat-radio-button>
