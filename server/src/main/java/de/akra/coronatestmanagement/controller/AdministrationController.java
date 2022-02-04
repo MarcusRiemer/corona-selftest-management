@@ -2,6 +2,7 @@ package de.akra.coronatestmanagement.controller;
 
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import de.akra.coronatestmanagement.WebSecurityConfig;
 import de.akra.coronatestmanagement.model.Person;
 import de.akra.coronatestmanagement.model.PersonGroup;
 import de.akra.coronatestmanagement.repository.PersonGroupRepository;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +30,7 @@ import static java.util.stream.Collectors.toMap;
 
 @RestController
 @RequestMapping("/api/administration")
+@Secured(WebSecurityConfig.ROLE_ADMIN)
 public class AdministrationController {
     private static final Logger log = LoggerFactory.getLogger(AdministrationController.class);
 

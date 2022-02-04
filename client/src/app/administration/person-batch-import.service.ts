@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -17,10 +17,17 @@ export class PersonBatchImportService {
 
   async uploadForm(formData: FormData): Promise<UploadResult> {
     console.log('Starting batch person import', formData);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: 'Basic ' + btoa('admin:pass'),
+    });
+
     return firstValueFrom(
       this.http.post<UploadResult>(
         `/api/administration/personBatchImport`,
-        formData
+        formData,
+        { withCredentials: true, headers }
       )
     );
   }

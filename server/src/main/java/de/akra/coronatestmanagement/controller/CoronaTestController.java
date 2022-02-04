@@ -1,5 +1,6 @@
 package de.akra.coronatestmanagement.controller;
 
+import de.akra.coronatestmanagement.WebSecurityConfig;
 import de.akra.coronatestmanagement.model.Person;
 import de.akra.coronatestmanagement.model.PersonGroup;
 import de.akra.coronatestmanagement.model.PersonTest;
@@ -7,6 +8,7 @@ import de.akra.coronatestmanagement.repository.PersonGroupRepository;
 import de.akra.coronatestmanagement.repository.PersonTestRepository;
 import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -21,6 +23,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/api/tests")
+@Secured(WebSecurityConfig.ROLE_REPORTER)
 public class CoronaTestController {
     private final PersonGroupRepository groupRepository;
     private final PersonTestRepository personTestRepository;
