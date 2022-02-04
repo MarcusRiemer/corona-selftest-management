@@ -1,10 +1,13 @@
 package de.akra.coronatestmanagement.controller;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/session")
@@ -15,14 +18,13 @@ public class SessionController {
         this.userDetailsService = userDetailsService;
     }
 
-    /**
-     * Tests for people are always explicitly created with "UNKNOWN" values.
-     */
-    @PostMapping("/login")
-    public boolean login(@RequestBody LoginParams params) {
-        var u = this.userDetailsService.loadUserByUsername(params.userName);
-        return u.getPassword().equals(params.password);
-    }
+    @GetMapping(path = "roles")
+    public Set<String> roles() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    record LoginParams(String userName, String password) { }
+        Set<String> roles = authentication.getAuthorities().stream()
+                .map(r -> r.getAuthority()).collect(Collectors.toSet());
+
+        return roles;
+    }
 }

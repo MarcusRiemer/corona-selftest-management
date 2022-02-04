@@ -3,9 +3,8 @@
     <mat-icon>menu</mat-icon>
   </button>
   <span><a class="index" [routerLink]="'/'">Corona-Testerfassung</a></span>
-  <button mat-button (click)="login()">
-    Anmelden
-  </button>
+  <span class="spacer"></span>
+  <app-login-state></app-login-state>
 </mat-toolbar>
 
 <mat-drawer-container>

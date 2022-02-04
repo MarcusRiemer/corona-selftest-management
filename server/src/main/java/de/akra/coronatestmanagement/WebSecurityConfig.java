@@ -2,6 +2,7 @@ package de.akra.coronatestmanagement;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,20 +28,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // Ordering of these antMatchers matters. The generic "we want to
-        // authenticate the API" matcher comes first and therefore has lowest
+        // authenticate the API" matcher comes last and therefore has lowest
         // precedence. The "but logins do not require authentication" comes
-        // last and is therefore more specific and overrides the general API
+        // first and is therefore more specific and overrides the general API
         // rule.
-        http.formLogin().loginProcessingUrl("/api/session/login")
-                .and().authorizeRequests()
-                .antMatchers("/api/**").authenticated()
-                .antMatchers("/api/session/**").permitAll();
+        http
+                .formLogin()
+                .successHandler((_req, res, _auth) -> res.setStatus(200))
+                .loginProcessingUrl("/api/session/login")
+                .and()
+                .logout()
+                .logoutUrl("/api/session/logout")
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/session/**").permitAll()
+                .antMatchers("/api/**").authenticated();
+
 
         // CSRF doesn't play well with a single page application
         http.csrf().disable();
 
         // Return "403 Forbidden" instead of a redirect when permissions are insufficient
-        http.exceptionHandling().authenticationEntryPoint(unauthenticatedRequestHandler());
+        http.exceptionHandling().authenticationEntryPoint((_req, res, _auth) -> res.setStatus(403));
     }
 
     @Bean
@@ -50,17 +61,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails analyst = User.withDefaultPasswordEncoder().username("analyst").password("pass").roles(ROLE_ANALYST).build();
 
         return new InMemoryUserDetailsManager(admin, reporter, analyst);
-    }
-
-    @Bean
-    UnauthenticatedRequestHandler unauthenticatedRequestHandler() {
-        return new UnauthenticatedRequestHandler();
-    }
-
-    static class UnauthenticatedRequestHandler implements AuthenticationEntryPoint {
-        @Override
-        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-            response.setStatus(403);
-        }
     }
 }

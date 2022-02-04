@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { UserService } from './core-services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -8,10 +7,4 @@ import { UserService } from './core-services/user.service';
 })
 export class AppComponent {
   showFiller = false;
-
-  constructor(private readonly userService: UserService) {}
-
-  async login() {
-    this.userService.login('admin', 'pass');
-  }
 }

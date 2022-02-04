@@ -1,0 +1,7 @@
+<button *ngIf="!state.isLoggedIn" mat-button (click)="login()">
+  Anmelden
+</button>
+
+<button *ngIf="state.isLoggedIn" mat-button (click)="logout()">
+  Abmelden
+</button>
