@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AboutComponent } from './about/about.component';
 
 const routes: Routes = [
-  { path: '', component: AboutComponent, pathMatch: 'full' },
   {
     path: 'register-test',
     loadChildren: () =>
@@ -22,6 +20,11 @@ const routes: Routes = [
       import('./administration/administration.module').then(
         (m) => m.AdministrationModule
       ),
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    loadChildren: () => import('./core/core.module').then((m) => m.CoreModule),
   },
 ];
 

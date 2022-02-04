@@ -18,16 +18,11 @@ export class PersonBatchImportService {
   async uploadForm(formData: FormData): Promise<UploadResult> {
     console.log('Starting batch person import', formData);
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: 'Basic ' + btoa('admin:pass'),
-    });
-
     return firstValueFrom(
       this.http.post<UploadResult>(
         `/api/administration/personBatchImport`,
         formData,
-        { withCredentials: true, headers }
+        { withCredentials: true }
       )
     );
   }

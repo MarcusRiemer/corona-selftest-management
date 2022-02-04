@@ -10,8 +10,7 @@ import { MatListModule } from '@angular/material/list';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { RegisterTestsModule } from './register-tests/register-tests.module';
-import { AboutComponent } from './about/about.component';
+import { CoreModule } from './core/core.module';
 
 const ANGULAR_MATERIAL_MODULES = [
   MatSidenavModule,
@@ -20,17 +19,15 @@ const ANGULAR_MATERIAL_MODULES = [
   MatListModule,
 ];
 
-const APP_MODULES = [RegisterTestsModule];
-
 @NgModule({
-  declarations: [AppComponent, AboutComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
     ...ANGULAR_MATERIAL_MODULES,
-    ...APP_MODULES,
+    CoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
