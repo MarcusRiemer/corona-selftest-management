@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.Locale;
 import java.util.Random;
 
 @SpringBootApplication
+@ConfigurationPropertiesScan
 public class CoronaTestManagementApplication {
     private static final Logger log = LoggerFactory.getLogger(CoronaTestManagementApplication.class);
 

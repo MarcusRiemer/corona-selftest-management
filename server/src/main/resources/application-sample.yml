@@ -1,17 +1,9 @@
 spring:
-  datasource:
-    # H2 File persistance: Path to database
-    url: jdbc:h2:file:./db/corona-test-management
   jpa:
     properties:
       hibernate:
         show_sql: true
         format_sql: true
-    hibernate:
-      ddl-auto: update
-  data:
-    rest:
-      base-path: "/api"
 
 logging:
   level:

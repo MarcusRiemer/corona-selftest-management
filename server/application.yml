@@ -1,0 +1,14 @@
+app:
+  # Users with roles that will be able to use your application
+  # TODO: Read these into the database and make it runtime-editable?
+  initialUsers:
+    - name: "admin"
+      # pass:  "$2a$12$.52kJqMqz/mQLwheZ8pA3ewlzUUOs6eq71hkRy21k.ydTyh2ke3J2"
+      password: "admin"
+      roles: ["ADMIN", "ANALYST", "REPORTER"]
+    - name: "reporter"
+      password: "pass"
+      roles: ["REPORTER"]
+    - name: "analyst"
+      password: "pass"
+      roles: [ "ANALYST" ]
