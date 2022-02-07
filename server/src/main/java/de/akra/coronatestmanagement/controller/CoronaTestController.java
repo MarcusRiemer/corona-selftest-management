@@ -84,7 +84,7 @@ public class CoronaTestController {
      */
     @PostMapping("/update")
     public boolean update(@RequestBody List<UpdateTestParams> params) {
-        for(var p: params) {
+        for (var p : params) {
             PersonTest t = personTestRepository.findById(p.testId).orElseThrow();
             if (p.changedProp.equals("origin")) {
                 t.setOrigin(p.value);
@@ -103,7 +103,8 @@ public class CoronaTestController {
         return true;
     }
 
-    public record UpdateTestParams(UUID testId, String changedProp, String value) {}
+    public record UpdateTestParams(UUID testId, String changedProp, String value) {
+    }
 
     public record CreateGroupTestSeriesParams(UUID groupId, String testDate) {
         public LocalDate getTestDate() {

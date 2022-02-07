@@ -20,7 +20,8 @@ public class AnalysisController {
         this.personTestRepository = personTestRepository;
     }
 
-    record DashboardDescription(int numPositive) { }
+    record DashboardDescription(int numPositive) {
+    }
 
     @GetMapping("/dashboard")
     public DashboardDescription groupsToday() {

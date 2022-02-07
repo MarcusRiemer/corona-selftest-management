@@ -13,16 +13,16 @@ import java.util.UUID;
 public interface PersonGroupRepository extends JpaRepository<PersonGroup, UUID> {
 
     @Query("""
-              SELECT 
-                g AS group, 
-                COUNT(t.id) as numTests
-              FROM PersonGroup g 
-                LEFT OUTER JOIN g.people p
-                LEFT OUTER JOIN p.tests t
-              WHERE t.date = :date 
-                OR t.date IS NULL
-              GROUP BY g.id
-              ORDER BY g.name""")
+            SELECT 
+              g AS group, 
+              COUNT(t.id) as numTests
+            FROM PersonGroup g 
+              LEFT OUTER JOIN g.people p
+              LEFT OUTER JOIN p.tests t
+            WHERE t.date = :date 
+              OR t.date IS NULL
+            GROUP BY g.id
+            ORDER BY g.name""")
     List<GroupNumTests> findGroupWithNumTestsByDay(
             @Param("date") LocalDate date
     );
@@ -31,8 +31,9 @@ public interface PersonGroupRepository extends JpaRepository<PersonGroup, UUID> 
     List<PersonGroup> findAllByName(@Param("names") Set<String> names);
 
 
-    public interface GroupNumTests {
+    interface GroupNumTests {
         PersonGroup getGroup();
+
         int getNumTests();
     }
 }

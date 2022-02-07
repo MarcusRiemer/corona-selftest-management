@@ -11,39 +11,39 @@ import java.util.UUID;
 
 public interface PersonTestRepository extends JpaRepository<PersonTest, UUID> {
     @Query("""
-           SELECT t
-           FROM PersonTest t
-             JOIN FETCH t.person p
-           WHERE p.personGroup.id = :groupId
-             AND t.date = :date
-           ORDER BY p.firstName, p.lastName
-           """)
+            SELECT t
+            FROM PersonTest t
+              JOIN FETCH t.person p
+            WHERE p.personGroup.id = :groupId
+              AND t.date = :date
+            ORDER BY p.firstName, p.lastName
+            """)
     List<PersonTest> findTestForGroupByDate(
             @Param("groupId") UUID groupId,
             @Param("date") LocalDate date
     );
 
     @Query("""
-           SELECT COUNT(t)
-           FROM PersonTest t 
-             JOIN t.person p
-             JOIN p.personGroup g
-           WHERE t.date = :date 
-             AND t.result = 'POSITIVE'
-           """)
+            SELECT COUNT(t)
+            FROM PersonTest t 
+              JOIN t.person p
+              JOIN p.personGroup g
+            WHERE t.date = :date 
+              AND t.result = 'POSITIVE'
+            """)
     int countPositiveTests(
             @Param("date") LocalDate date
     );
 
     @Query("""
-           SELECT g.id, COUNT(t)
-           FROM PersonTest t 
-             JOIN t.person p
-             JOIN p.personGroup g
-           WHERE t.date = :date 
-             AND t.result = 'POSITIVE'
-           GROUP BY g.id 
-           """)
+            SELECT g.id, COUNT(t)
+            FROM PersonTest t 
+              JOIN t.person p
+              JOIN p.personGroup g
+            WHERE t.date = :date 
+              AND t.result = 'POSITIVE'
+            GROUP BY g.id 
+            """)
     Object countPositiveTestsPerGroup(
             @Param("date") LocalDate date
     );

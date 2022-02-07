@@ -56,7 +56,7 @@ public class AdministrationController {
                 .readAll();
 
         var grouped = values.stream()
-                .map(l -> (CsvLine)l)
+                .map(l -> (CsvLine) l)
                 .collect(groupingBy(CsvLine::group));
 
         // TODO: Implement a testable version building upon CsvLine

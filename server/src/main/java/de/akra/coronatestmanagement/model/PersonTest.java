@@ -17,7 +17,7 @@ public class PersonTest {
     private Origin origin = Origin.UNKNOWN;
 
     @Enumerated(EnumType.STRING)
-    private  Result result = Result.UNKNOWN;
+    private Result result = Result.UNKNOWN;
 
     @ManyToOne()
     private Person person;

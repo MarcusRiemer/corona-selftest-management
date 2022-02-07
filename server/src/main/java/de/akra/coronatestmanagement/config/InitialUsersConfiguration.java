@@ -9,5 +9,6 @@ import java.util.List;
 @ConstructorBinding
 public record InitialUsersConfiguration(List<InitialUser> initialUsers) {
     @ConstructorBinding
-    record InitialUser(String name, String password, String[] roles) { }
+    record InitialUser(String name, String password, String[] roles) {
+    }
 }

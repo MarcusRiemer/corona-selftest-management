@@ -1,9 +1,8 @@
 package de.akra.coronatestmanagement.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import java.util.*;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * A group of people that will usually be tested together. This class is not simply
