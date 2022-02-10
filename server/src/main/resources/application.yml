@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    # H2 File persistence: Path to database
+    url: jdbc:h2:file:./db/corona-test-management
+
+  h2:
+    console:
+      # We don't want to leak data via a public database management console
+      enabled: false
+
+  jpa:
+    hibernate:
+      # Generate the database schema (if it doesn't exist)
+      # TODO: Use some tool for schema management
+      ddl-auto: update
