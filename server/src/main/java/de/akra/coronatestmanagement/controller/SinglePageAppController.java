@@ -1,7 +1,7 @@
 package de.akra.coronatestmanagement.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * The frontend is a "typical" single page application which does its own
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class SinglePageAppController {
-    @RequestMapping(value = "/{path:[^\\.]*}")
+    @GetMapping(value = {"/{r:[^\\.]+}", "/**/{r:[^\\.]+}"})
     public String redirect() {
         return "forward:/";
     }

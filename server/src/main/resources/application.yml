@@ -13,3 +13,8 @@ spring:
       # Generate the database schema (if it doesn't exist)
       # TODO: Use some tool for schema management
       ddl-auto: update
+
+  mvc:
+    pathmatch:
+      # Sadly required for catchall of SinglePageApplicationController
+      matching-strategy: ant_path_matcher
