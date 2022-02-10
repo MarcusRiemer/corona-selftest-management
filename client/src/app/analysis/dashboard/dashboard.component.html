@@ -41,6 +41,20 @@
         {{ data.overall.numUnknown }}
       </mat-card-content>
     </mat-card>
+
+    <mat-card>
+      <mat-card-title>Geimpft</mat-card-title>
+      <mat-card-content>
+        {{ data.overallExempt.numVaccinated }}
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>Genesen</mat-card-title>
+      <mat-card-content>
+        {{ data.overallExempt.numRecovered }}
+      </mat-card-content>
+    </mat-card>
   </div>
   <table
     mat-table

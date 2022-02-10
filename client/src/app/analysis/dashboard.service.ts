@@ -17,8 +17,14 @@ export interface GroupCountDescription extends CountDescription {
   name: string;
 }
 
+export interface ExemptCountDescription {
+  numVaccinated: number;
+  numRecovered: number;
+}
+
 export interface DashboardDescription {
   overall: CountDescription;
+  overallExempt: ExemptCountDescription;
   grouped: GroupCountDescription[];
 }
 

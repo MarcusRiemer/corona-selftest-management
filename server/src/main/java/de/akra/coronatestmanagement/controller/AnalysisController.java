@@ -1,6 +1,7 @@
 package de.akra.coronatestmanagement.controller;
 
 import de.akra.coronatestmanagement.config.WebSecurityConfig;
+import de.akra.coronatestmanagement.repository.PersonTestExemptionRepository;
 import de.akra.coronatestmanagement.repository.PersonTestRepository;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +18,11 @@ public class AnalysisController {
 
     private final PersonTestRepository personTestRepository;
 
-    public AnalysisController(PersonTestRepository personTestRepository) {
-        this.personTestRepository = personTestRepository;
-    }
+    private final PersonTestExemptionRepository personTestExemptionRepository;
 
-    record DashboardDescription(PersonTestRepository.CountTests overall, List<PersonTestRepository.CountGroupTests> grouped) {
+    public AnalysisController(PersonTestRepository personTestRepository, PersonTestExemptionRepository personTestExemptionRepository) {
+        this.personTestRepository = personTestRepository;
+        this.personTestExemptionRepository = personTestExemptionRepository;
     }
 
     @GetMapping("/dashboard")
@@ -29,6 +30,12 @@ public class AnalysisController {
         var d = LocalDate.now();
         var overallCount = personTestRepository.countTests(d);
         var groupedCount = personTestRepository.countTestsByGroup(d);
-        return new DashboardDescription(overallCount, groupedCount);
+        var overallExempt = personTestExemptionRepository.countExemptions(d);
+        return new DashboardDescription(overallCount, overallExempt, groupedCount);
+    }
+
+    record DashboardDescription(PersonTestRepository.CountTests overall,
+                                PersonTestExemptionRepository.CountExemptions overallExempt,
+                                List<PersonTestRepository.CountGroupTests> grouped) {
     }
 }

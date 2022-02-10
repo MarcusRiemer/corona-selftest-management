@@ -11,5 +11,22 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PersonTestExemptionRepository extends JpaRepository<PersonTestExemption, UUID> {
+    @Query(value = """
+           SELECT
+             COUNT(pte.reason) FILTER(WHERE pte.reason = 'RECOVERED') AS numRecovered,
+             COUNT(pte.reason) FILTER(WHERE pte.reason = 'VACCINATED') AS numVaccinated
+           FROM person p
+             INNER JOIN person_test_exemption pte ON pte.person_id = p.id
+           WHERE ((pte."BEGIN" >= :date) AND (:date <= pte."END"));
+           """,
+            nativeQuery = true)
+    CountExemptions countExemptions(
+            @Param("date") LocalDate date
+    );
 
+    interface CountExemptions {
+        int getNumVaccinated();
+
+        int getNumRecovered();
+    }
 }
