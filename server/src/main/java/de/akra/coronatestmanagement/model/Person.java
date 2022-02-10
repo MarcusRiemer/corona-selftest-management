@@ -15,7 +15,10 @@ public class Person {
     @Column(columnDefinition = "uuid", updatable = false)
     private UUID id;
 
+    @Column(nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
 
     @ManyToOne()
@@ -23,6 +26,9 @@ public class Person {
 
     @OneToMany(mappedBy = "person")
     private Set<PersonTest> tests;
+
+    @OneToMany(mappedBy = "person")
+    private Set<PersonTestExemption> exemptions;
 
     protected Person() {
     }

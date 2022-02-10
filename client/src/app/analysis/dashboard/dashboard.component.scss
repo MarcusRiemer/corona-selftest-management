@@ -31,12 +31,13 @@ table {
         background-color: rgba(yellow, 0.2);
     }
 
+    // Must be mentioned after unknown so that it is more specific
+    tr.positive {
+        background-color: rgba(red, 0.2);
+    }
+
     td.unknown, td.positive {
         font-weight: bold;
         font-size: 1.2rem;
-    }
-
-    tr.positive {
-        background-color: rgba(red, 0.2);
     }
 }

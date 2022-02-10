@@ -3,9 +3,12 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 export interface UploadResult {
-  numLines: number;
-  errors: string[];
-  skipped: string[];
+  numRecords: number;
+  numPeople: number;
+  numExemptions: number;
+  errors: { line: string; exception: string }[];
+  skippedPeople: string[];
+  skippedExemptions: string[];
   newGroups: string[];
 }
 

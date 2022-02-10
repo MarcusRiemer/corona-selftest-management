@@ -6,6 +6,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
+/**
+ * A test that has been conducted on a person at a specific date.
+ */
 @Entity
 public class PersonTest {
     @Id

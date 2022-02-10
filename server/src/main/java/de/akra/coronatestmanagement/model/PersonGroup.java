@@ -16,7 +16,7 @@ public class PersonGroup {
     @Column(columnDefinition = "uuid", updatable = false)
     private UUID id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "personGroup")

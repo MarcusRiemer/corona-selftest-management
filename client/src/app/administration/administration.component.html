@@ -11,24 +11,32 @@
   <table>
     <tr>
       <td>Anzahl Datensätze:</td>
-      <td>{{ lastUploadResult.numLines }}</td>
+      <td>{{ lastUploadResult.numRecords }}</td>
     </tr>
     <tr>
       <td>Fehlerhafte Datensätze:</td>
       <td>{{ lastUploadResult.errors.length }}</td>
     </tr>
     <tr>
-      <td>Übersprungene Datensätze:</td>
-      <td>{{ lastUploadResult.skipped.length }}</td>
+      <td>Übersprungene Personen:</td>
+      <td>{{ lastUploadResult.skippedPeople.length }}</td>
     </tr>
     <tr>
-      <td>Neue Datensätze:</td>
+      <td>Neue Personen:</td>
       <td>
-        {{
-          lastUploadResult.numLines -
-            lastUploadResult.errors.length -
-            lastUploadResult.skipped.length
-        }}
+        {{ lastUploadResult.numPeople }}
+      </td>
+    </tr>
+    <tr>
+      <td>Neue Ausnahmezeiträume (geimpft / genesen):</td>
+      <td>
+        {{ lastUploadResult.numExemptions }}
+      </td>
+    </tr>
+    <tr>
+      <td>Übersprungene Ausnahmezeiträume (geimpft / genesen):</td>
+      <td>
+        {{ lastUploadResult.skippedExemptions.length }}
       </td>
     </tr>
     <tr>
@@ -39,7 +47,16 @@
       <td *ngIf="lastUploadResult.newGroups.length === 0">Keine</td>
     </tr>
   </table>
-  <p></p>
+
+  <h3 *ngIf="lastUploadResult.errors.length > 0">Detaillierte Fehler</h3>
+  <ul>
+    <li *ngFor="let error of lastUploadResult.errors">
+      <dl>
+        <dt><code>{{ error.line }}</code></dt>
+        <dt><code>{{ error.exception }}</code></dt>
+      </dl>
+    </li>
+  </ul>
 </div>
 
 <h3>Import-Dateiformat</h3>
@@ -55,11 +72,11 @@
   <dt>lastName (<code>Zeichenkette</code>)</dt>
   <dd>Nachmame</dd>
 
-  <dt class="not-implemented">vaccinated (<code>Datum</code>, wird aktuell ignoriert)</dt>
-  <dd>Datum der letzten relevanten Impfung</dd>
+  <dt>vaccinated (<code>Datum</code>)</dt>
+  <dd>Ausgenommen von Tests aufgrund einer Impfung bis zu diesem Datum (einschließlich)</dd>
 
-  <dt class="not-implemented">recovered (<code>Datum</code>, wird aktuell ignoriert)</dt>
-  <dd>Genesen bis zu diesem Datum</dd>
+  <dt>recovered (<code>Datum</code>)</dt>
+  <dd>Ausgenommen von Tests aufgrund einer Genesung bis zu diesem Datum (einschließlich)</dd>
 
   <dt>group (<code>Zeichenkette</code>)</dt>
   <dd>Name der Klassen</dd>
@@ -68,10 +85,10 @@
 <h4>Beispiel</h4>
 <p>Unten stehender Datensatz enthält die folgenden Personen</p>
 <ul>
-  <li>Albert Erster, <span class="not-implemented">geimpft am 1.1.2020, nicht genesen</span>, Gruppe 1c</li>
-  <li>Berta Zweite, <span class="not-implemented">nicht geimpft, genesen bis 1.2.2020</span>, Gruppe 1b</li>
-  <li>Cäsar Dritter, <span class="not-implemented">geimpft am 1.3.2020, genesen bis 1.4.2020</span>, Gruppe 7a</li>
-  <li>Erwin Letzter, <span class="not-implemented">nicht geimpft, nicht genesen</span>, Gruppe 7a</li>
+  <li>Albert Erster, geimpft am 1.1.2020, nicht genesen, Gruppe 1c</li>
+  <li>Berta Zweite, nicht geimpft, genesen bis 1.2.2020, Gruppe 1b</li>
+  <li>Cäsar Dritter, geimpft am 1.3.2020, genesen bis 1.4.2020, Gruppe 7a</li>
+  <li>Erwin Letzter, nicht geimpft, nicht genesen, Gruppe 7a</li>
 </ul>
 <pre><code>
 firstName,lastName,vaccinated,recovered,group
