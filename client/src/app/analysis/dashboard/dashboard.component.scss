@@ -1,0 +1,42 @@
+.overall-today {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    text-align: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    mat-card {
+        width: 7rem;
+        height: 7rem;
+
+        mat-card-content {
+            height: 5rem;
+            font-size: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
+table {
+    width: 100%;
+    td, th {
+        text-align: end;
+    }
+
+
+    tr.unknown {
+        background-color: rgba(yellow, 0.2);
+    }
+
+    td.unknown, td.positive {
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    tr.positive {
+        background-color: rgba(red, 0.2);
+    }
+}

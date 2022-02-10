@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/analysis")
@@ -20,13 +21,14 @@ public class AnalysisController {
         this.personTestRepository = personTestRepository;
     }
 
-    record DashboardDescription(int numPositive) {
+    record DashboardDescription(PersonTestRepository.CountTests overall, List<PersonTestRepository.CountGroupTests> grouped) {
     }
 
     @GetMapping("/dashboard")
     public DashboardDescription groupsToday() {
         var d = LocalDate.now();
-        var queryResult = personTestRepository.countPositiveTests(d);
-        return new DashboardDescription(queryResult);
+        var overallCount = personTestRepository.countTests(d);
+        var groupedCount = personTestRepository.countTestsByGroup(d);
+        return new DashboardDescription(overallCount, groupedCount);
     }
 }

@@ -63,7 +63,7 @@ public class PersonTest {
      * we assume that these are the only valid sites.
      */
     public enum Origin {
-        SCHOOL, THIRD_PARTY, SELF_DISCLOSURE, UNKNOWN
+        LOCAL, THIRD_PARTY, SELF_DISCLOSURE, UNKNOWN
     }
 
     public enum Result {

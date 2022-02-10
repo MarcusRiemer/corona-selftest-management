@@ -17,7 +17,7 @@ export interface PeopleGroupListDescription {
 }
 
 export interface TestState {
-  origin: 'SCHOOL' | 'THIRD_PARTY' | 'SELF_DISCLOSURE' | 'UNKNOWN';
+  origin: 'LOCAL' | 'THIRD_PARTY' | 'SELF_DISCLOSURE' | 'UNKNOWN';
   result: 'POSITIVE' | 'NEGATIVE' | 'UNKNOWN';
 }
 

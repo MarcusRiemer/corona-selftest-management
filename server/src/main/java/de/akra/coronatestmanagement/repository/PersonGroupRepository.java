@@ -22,7 +22,7 @@ public interface PersonGroupRepository extends JpaRepository<PersonGroup, UUID> 
             WHERE t.date = :date 
               OR t.date IS NULL
             GROUP BY g.id
-            ORDER BY g.name""")
+            ORDER BY LENGTH(g.name) ASC, g.name""")
     List<GroupNumTests> findGroupWithNumTestsByDay(
             @Param("date") LocalDate date
     );

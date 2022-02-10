@@ -23,28 +23,63 @@ public interface PersonTestRepository extends JpaRepository<PersonTest, UUID> {
             @Param("date") LocalDate date
     );
 
-    @Query("""
-            SELECT COUNT(t)
-            FROM PersonTest t 
-              JOIN t.person p
-              JOIN p.personGroup g
-            WHERE t.date = :date 
-              AND t.result = 'POSITIVE'
-            """)
-    int countPositiveTests(
+    @Query(value = """
+           SELECT 
+             COUNT(t.ID) AS numTests,
+             COUNT(t.result) FILTER(WHERE t.result = 'POSITIVE') AS numPositive,
+             COUNT(t.result) FILTER(WHERE t.result = 'NEGATIVE') AS numNegative,
+             COUNT(t.result) FILTER(WHERE t.result = 'UNKNOWN') AS numUnknown,
+             COUNT(t.origin) FILTER(WHERE t.origin = 'LOCAL') AS numLocal,
+             COUNT(t.origin) FILTER(WHERE t.origin = 'THIRD_PARTY') AS numThirdParty,
+             COUNT(t.origin) FILTER(WHERE t.origin = 'SELF_DISCLOSURE') AS numSelfDisclosure
+           FROM person_test t
+           WHERE t.date = :date
+           """,
+           nativeQuery = true)
+    CountTests countTests(
             @Param("date") LocalDate date
     );
 
-    @Query("""
-            SELECT g.id, COUNT(t)
-            FROM PersonTest t 
-              JOIN t.person p
-              JOIN p.personGroup g
-            WHERE t.date = :date 
-              AND t.result = 'POSITIVE'
-            GROUP BY g.id 
-            """)
-    Object countPositiveTestsPerGroup(
+    @Query(value = """
+           SELECT pg.name,
+             COUNT(t.ID) AS numTests,
+             COUNT(t.result) FILTER(WHERE t.result = 'POSITIVE') AS numPositive,
+             COUNT(t.result) FILTER(WHERE t.result = 'NEGATIVE') AS numNegative,
+             COUNT(t.result) FILTER(WHERE t.result = 'UNKNOWN') AS numUnknown,
+             COUNT(t.origin) FILTER(WHERE t.origin = 'LOCAL') AS numLocal,
+             COUNT(t.origin) FILTER(WHERE t.origin = 'THIRD_PARTY') AS numThirdParty,
+             COUNT(t.origin) FILTER(WHERE t.origin = 'SELF_DISCLOSURE') AS numSelfDisclosure
+           FROM person_test t
+             INNER JOIN person p ON t.person_id = p.id
+             INNER JOIN person_group pg ON pg.id = p.person_group_id
+           WHERE t.date = :date
+           GROUP BY pg.id, pg.name
+           ORDER BY LENGTH (pg.name) ASC, pg.name
+           """,
+           nativeQuery = true)
+    List<CountGroupTests> countTestsByGroup(
             @Param("date") LocalDate date
     );
+
+    interface CountTests {
+        int getNumTests();
+
+        int getNumPositive();
+
+        int getNumNegative();
+
+        int getNumUnknown();
+
+        int getNumLocal();
+
+        int getNumThirdParty();
+
+        int getNumSelfDisclosure();
+    }
+
+    interface CountGroupTests extends CountTests {
+        String getId();
+
+        String getName();
+    }
 }

@@ -1,0 +1,105 @@
+<ng-container *ngIf="data; else loading">
+  <div class="overall-today">
+    <mat-card>
+      <mat-card-title>Positiv</mat-card-title>
+      <mat-card-content>
+        {{ data.overall.numPositive }}
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>Negativ</mat-card-title>
+      <mat-card-content>
+        {{ data.overall.numNegative }}
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>Schule</mat-card-title>
+      <mat-card-content>
+        {{ data.overall.numLocal }}
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>3. Stelle</mat-card-title>
+      <mat-card-content>
+        {{ data.overall.numThirdParty }}
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>Selbst</mat-card-title>
+      <mat-card-content>
+        {{ data.overall.numSelfDisclosure }}
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>Unbekannt</mat-card-title>
+      <mat-card-content>
+        {{ data.overall.numUnknown }}
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <table
+    mat-table
+    mat-sort
+    [dataSource]="data.grouped"
+    class="mat-elevation-z1"
+  >
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Gruppe</th>
+      <td mat-cell *matCellDef="let g">{{ g.name }}</td>
+    </ng-container>
+    <ng-container matColumnDef="numPositive">
+      <th mat-header-cell *matHeaderCellDef>Positiv</th>
+      <td
+        mat-cell
+        *matCellDef="let g"
+        [ngClass]="{ positive: g.numPositive > 0 }"
+      >
+        {{ g.numPositive }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="numNegative">
+      <th mat-header-cell *matHeaderCellDef>Negativ</th>
+      <td mat-cell *matCellDef="let g">{{ g.numNegative }}</td>
+    </ng-container>
+    <ng-container matColumnDef="numLocal">
+      <th mat-header-cell *matHeaderCellDef>Art: Schule</th>
+      <td mat-cell *matCellDef="let g">{{ g.numLocal }}</td>
+    </ng-container>
+    <ng-container matColumnDef="numThirdParty">
+      <th mat-header-cell *matHeaderCellDef>Art: Dritte Stelle</th>
+      <td mat-cell *matCellDef="let g">{{ g.numThirdParty }}</td>
+    </ng-container>
+    <ng-container matColumnDef="numSelfDisclosure">
+      <th mat-header-cell *matHeaderCellDef>Art: Selbstauskunft</th>
+      <td mat-cell *matCellDef="let g">{{ g.numSelfDisclosure }}</td>
+    </ng-container>
+    <ng-container matColumnDef="numUnknown">
+      <th mat-header-cell *matHeaderCellDef>Unbekannt</th>
+      <td
+        mat-cell
+        *matCellDef="let g"
+        [ngClass]="{ unknown: g.numUnknown > 0 }"
+      >
+        {{ g.numUnknown }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let g; columns: displayedColumns"
+      [ngClass]="{ positive: g.numPositive > 0, unknown: g.numUnknown > 0 }"
+    >
+      >
+    </tr>
+  </table>
+</ng-container>
+
+<ng-template #loading>
+  <div>Laden ...</div>
+</ng-template>
