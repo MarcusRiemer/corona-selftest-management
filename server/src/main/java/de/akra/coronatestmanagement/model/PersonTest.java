@@ -40,6 +40,8 @@ public class PersonTest {
         return id;
     }
 
+    public UUID getPersonId() { return person.getId(); }
+
     public LocalDate getDate() {
         return date;
     }

@@ -9,6 +9,7 @@ import de.akra.coronatestmanagement.model.PersonTestExemption;
 import de.akra.coronatestmanagement.repository.PersonGroupRepository;
 import de.akra.coronatestmanagement.repository.PersonRepository;
 import de.akra.coronatestmanagement.repository.PersonTestExemptionRepository;
+import de.akra.coronatestmanagement.util.TestDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -93,8 +94,8 @@ public class AdministrationController {
                 CsvLine line = (CsvLine) raw;
 
                 // TODO: Actually use these dates
-                LocalDate vaccDate = parseDate(line.vaccinated);
-                LocalDate recoverDate = !line.recovered.isBlank() ? LocalDate.from(DATE_TIME_FORMATTER.parse(line.recovered)) : null;
+                LocalDate vaccDate = TestDate.parse(line.vaccinated);
+                LocalDate recoverDate = TestDate.parse(line.recovered);
 
                 var group = groupByName.get(line.group);
 
@@ -133,20 +134,6 @@ public class AdministrationController {
         }
 
         return new ImportResult(values.size(), numPeople, numExemptions, errors, skippedPeople, skippedExemptions, missingGroupNames);
-    }
-
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("d.M.yyyy");
-
-    /**
-     * An attempt to sort of leniently but safely parse dates. Example CSV sometimes mixed up
-     * "/" and "." delimiters.
-     */
-    private static LocalDate parseDate(String date) {
-        if (date.isBlank()) {
-            return null;
-        } else {
-            return LocalDate.from(DATE_TIME_FORMATTER.parse(date.replace("/", ".")));
-        }
     }
 
     private Optional<PersonTestExemption> possiblyImportExemption(Person p, LocalDate endDate, PersonTestExemption.Reason reason) {

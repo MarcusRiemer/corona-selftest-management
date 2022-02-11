@@ -4,17 +4,22 @@ import de.akra.coronatestmanagement.config.WebSecurityConfig;
 import de.akra.coronatestmanagement.model.Person;
 import de.akra.coronatestmanagement.model.PersonGroup;
 import de.akra.coronatestmanagement.model.PersonTest;
+import de.akra.coronatestmanagement.model.PersonTestExemption;
 import de.akra.coronatestmanagement.repository.PersonGroupRepository;
+import de.akra.coronatestmanagement.repository.PersonRepository;
 import de.akra.coronatestmanagement.repository.PersonTestRepository;
+import de.akra.coronatestmanagement.util.TestDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Responsible for all data retrieval and manipulation that can be considered test
@@ -24,24 +29,35 @@ import java.util.UUID;
 @RequestMapping("/api/tests")
 @Secured(WebSecurityConfig.ROLE_REPORTER)
 public class CoronaTestController {
+    private static final Logger log = LoggerFactory.getLogger(CoronaTestController.class);
+
     private final PersonGroupRepository groupRepository;
+    private final PersonRepository personRepository;
     private final PersonTestRepository personTestRepository;
 
     @Autowired
     public CoronaTestController(
             PersonGroupRepository groupRepository,
-            PersonTestRepository personTestRepository) {
+            PersonRepository personRepository, PersonTestRepository personTestRepository) {
         this.groupRepository = groupRepository;
+        this.personRepository = personRepository;
         this.personTestRepository = personTestRepository;
     }
 
     /**
      * Dashboard data for all groups that may have a test today.
      */
-    @GetMapping("/groupsToday")
-    public List<PeopleGroupListDescription> groupsToday() {
-        var d = LocalDate.now();
-        var queryResult = groupRepository.findGroupWithNumTestsByDay(d);
+    @GetMapping("/groups")
+    public List<PeopleGroupListDescription> groupsForDay(
+            @RequestParam() Optional<String> date
+    ) {
+        log.info("Requesting groups for {}", date);
+
+        var d = date.isPresent() ? TestDate.parse(date.get()) : LocalDate.now();
+        var queryResult = groupRepository.findGroupWithNumTestsByDay(d).stream().toList();
+
+        log.debug("Got {} groups, expected {}", queryResult.size(), groupRepository.count());
+
         return queryResult
                 .stream()
                 .map(p -> new PeopleGroupListDescription(p.getGroup().getId(), p.getGroup().getName(), p.getGroup().getCount(), p.getNumTests()))
@@ -55,9 +71,20 @@ public class CoronaTestController {
     public TestResultsGroupList forGroup(@PathVariable UUID groupId) {
         var d = LocalDate.now();
         var g = groupRepository.findById(groupId).orElseThrow();
-        var tests = personTestRepository.findTestForGroupByDate(groupId, d);
 
-        return new TestResultsGroupList(d, g, tests.stream().map(t -> new PersonTestResultDescription(t.getPerson(), t)).toList());
+        // Okay, there doesn't
+        var people = personRepository.findPeopleForGroupByDate(groupId)
+                .stream()
+                .collect(Collectors.toMap(Person::getId, Function.identity()));
+        var testsByPerson = personTestRepository.findTestsForGroupByDate(groupId, d)
+                .stream()
+                .collect(Collectors.toMap(PersonTest::getPersonId, Function.identity()));
+
+        List<PersonTestResultDescription> results = people.values()
+                .stream()
+                .map(t -> new PersonTestResultDescription(t, Optional.of(testsByPerson.get(t.getId())), t.getExemptions())).toList();
+
+        return new TestResultsGroupList(d, g, results);
     }
 
     /**
@@ -70,7 +97,9 @@ public class CoronaTestController {
 
         ArrayList<PersonTest> tests = new ArrayList<>(personGroup.getPeople().size());
         for (var person : personGroup.getPeople()) {
-            tests.add(new PersonTest(person, date));
+            //if (params.testAll || !person.isExempt()) {
+                tests.add(new PersonTest(person, date));
+            //}
         }
         personTestRepository.saveAll(tests);
 
@@ -106,7 +135,7 @@ public class CoronaTestController {
     public record UpdateTestParams(UUID testId, String changedProp, String value) {
     }
 
-    public record CreateGroupTestSeriesParams(UUID groupId, String testDate) {
+    public record CreateGroupTestSeriesParams(UUID groupId, String testDate, boolean testAll) {
         public LocalDate getTestDate() {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d");
             return LocalDate.parse(testDate.replace('/', '-'), formatter);
@@ -116,7 +145,7 @@ public class CoronaTestController {
     public record TestResultsGroupList(LocalDate date, PersonGroup group, List<PersonTestResultDescription> results) {
     }
 
-    public record PersonTestResultDescription(Person person, PersonTest result) {
+    public record PersonTestResultDescription(Person person, Optional<PersonTest> result, Set<PersonTestExemption> exemptions) {
     }
 
     public record PeopleGroupListDescription(UUID id, String name, int personCount, int testCount) {

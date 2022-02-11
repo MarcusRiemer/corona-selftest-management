@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 export interface LoginState {
   isLoggedIn: boolean;
@@ -18,9 +18,15 @@ const ROLE_ANONYMOUS = 'ROLE_ANONYMOUS';
   providedIn: 'root',
 })
 export class UserService {
+  private readonly _isLoggedIn$ = new BehaviorSubject(false);
+
+  public readonly isLoggedIn$ = this._isLoggedIn$.asObservable();
+
   constructor(private readonly http: HttpClient) {}
 
-  public isLoggedIn = false;
+  get isLoggedIn() {
+    return this._isLoggedIn$.value;
+  }
 
   public roles = new Set<string>();
 
@@ -36,7 +42,7 @@ export class UserService {
       // TODO: Fetch roles on login
       // TODO: Don't rely on non-success exception
       await firstValueFrom(this.http.post<boolean>('/api/session/login', data));
-      this.isLoggedIn = true;
+      this._isLoggedIn$.next(true);
     } catch (e) {
       this.resetStateLoggedOut();
     }
@@ -58,7 +64,7 @@ export class UserService {
     if (this.roles.size === 1 && this.roles.has(ROLE_ANONYMOUS)) {
       this.resetStateLoggedOut();
     } else {
-      this.isLoggedIn = true;
+      this._isLoggedIn$.next(true);
     }
 
     return { isLoggedIn: this.isLoggedIn, roles: this.roles };
@@ -89,7 +95,7 @@ export class UserService {
   }
 
   private resetStateLoggedOut() {
-    this.isLoggedIn = false;
+    this._isLoggedIn$.next(false);
     this.roles = new Set<string>();
   }
 }

@@ -1,4 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Observable, switchMap } from 'rxjs';
+import { CurrentDateService } from 'src/app/core/current-date.service';
 import { DashboardDescription, DashboardService } from '../dashboard.service';
 
 @Component({
@@ -6,10 +8,7 @@ import { DashboardDescription, DashboardService } from '../dashboard.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
-  @Input()
-  public data: DashboardDescription | undefined;
-
+export class DashboardComponent {
   displayedColumns: (keyof DashboardDescription['grouped'][0])[] = [
     'name',
     'numNegative',
@@ -20,9 +19,13 @@ export class DashboardComponent implements OnInit {
     'numUnknown',
   ];
 
-  constructor(private readonly dashboardService: DashboardService) {}
+  constructor(
+    private readonly dashboardService: DashboardService,
+    private readonly _currentDate: CurrentDateService
+  ) {}
 
-  async ngOnInit() {
-    this.data = await this.dashboardService.fetchDashboard();
-  }
+  readonly data$: Observable<DashboardDescription> =
+    this._currentDate.current$.pipe(
+      switchMap((d) => this.dashboardService.fetchDashboard(d))
+    );
 }

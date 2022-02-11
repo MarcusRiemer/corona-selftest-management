@@ -8,6 +8,7 @@
       <tr>
         <th></th>
         <th></th>
+        <th></th>
         <th>
           <button
             mat-button
@@ -30,6 +31,7 @@
       <tr>
         <th>Vorname</th>
         <th>Nachname</th>
+        <th>Status</th>
         <th>Testergebnis</th>
         <th>Testherkunft</th>
         <th></th>
@@ -40,19 +42,30 @@
         <td>{{ t.person.firstName }}</td>
         <td>{{ t.person.lastName }}</td>
         <td>
+          <app-exemption-status
+            [exemptions]="t.exemptions"
+          ></app-exemption-status>
+        </td>
+        <td>
           <app-select-test-result
-              [testResult]="t.result"
-              [readOnly]="isDoingGlobalOperation"
+            *ngIf="t.result"
+            [testResult]="t.result"
+            [readOnly]="isDoingGlobalOperation"
           ></app-select-test-result>
         </td>
         <td>
           <app-select-test-origin
-              [testResult]="t.result"
-              [readOnly]="isDoingGlobalOperation"
+            *ngIf="t.result"
+            [testResult]="t.result"
+            [readOnly]="isDoingGlobalOperation"
           ></app-select-test-origin>
         </td>
         <td>
-          <button mat-button (click)="deleteTestResult(t.result.id)">
+          <button
+            *ngIf="t.result"
+            mat-button
+            (click)="deleteTestResult(t.result.id)"
+          >
             <mat-icon>delete</mat-icon>
           </button>
         </td>

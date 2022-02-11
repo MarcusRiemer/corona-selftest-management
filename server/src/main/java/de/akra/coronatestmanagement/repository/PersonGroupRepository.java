@@ -18,10 +18,8 @@ public interface PersonGroupRepository extends JpaRepository<PersonGroup, UUID> 
               COUNT(t.id) as numTests
             FROM PersonGroup g 
               LEFT OUTER JOIN g.people p
-              LEFT OUTER JOIN p.tests t
-            WHERE t.date = :date 
-              OR t.date IS NULL
-            GROUP BY g.id
+              LEFT OUTER JOIN PersonTest t ON (t.person.id = p.id AND t.date = :date)
+            GROUP BY g.id, g.name
             ORDER BY LENGTH(g.name) ASC, g.name""")
     List<GroupNumTests> findGroupWithNumTestsByDay(
             @Param("date") LocalDate date

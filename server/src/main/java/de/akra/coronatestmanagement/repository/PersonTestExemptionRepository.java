@@ -17,9 +17,10 @@ public interface PersonTestExemptionRepository extends JpaRepository<PersonTestE
              COUNT(pte.reason) FILTER(WHERE pte.reason = 'VACCINATED') AS numVaccinated
            FROM person p
              INNER JOIN person_test_exemption pte ON pte.person_id = p.id
-           WHERE ((pte."BEGIN" >= :date) AND (:date <= pte."END"));
-           """,
-            nativeQuery = true)
+             INNER JOIN person_test pt ON pt.person_id = p.id
+           WHERE ((pte."BEGIN" >= :date) AND (:date <= pte."END"))
+             AND pt.date = :date""",
+           nativeQuery = true)
     CountExemptions countExemptions(
             @Param("date") LocalDate date
     );

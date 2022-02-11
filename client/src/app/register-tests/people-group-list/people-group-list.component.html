@@ -6,10 +6,13 @@
   </mat-card-content>
   <mat-divider inset></mat-divider>
   <mat-card-actions>
-    <button *ngIf="group.testCount === 0" mat-button (click)="createTestSeries()">
-      Testreihe für <strong>heute</strong> anlegen
+    <button *ngIf="group.testCount === 0" mat-button (click)="createTestSeries(true)">
+      <strong>Alle</strong> testen
     </button>
-    <a *ngIf="group.testCount > 0" [routerLink]="targetUrl">
+    <button *ngIf="group.testCount === 0" mat-button (click)="createTestSeries(false)">
+      Personen <strong>ohne Befreiung</strong> testen
+    </button>
+        <a *ngIf="group.testCount > 0" [routerLink]="targetUrl">
       Zur Testreihe
     </a>
   </mat-card-actions>

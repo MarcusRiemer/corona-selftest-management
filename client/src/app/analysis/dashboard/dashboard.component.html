@@ -1,4 +1,4 @@
-<ng-container *ngIf="data; else loading">
+<ng-container *ngIf="data$ | async as data; else loading">
   <div class="overall-today">
     <mat-card>
       <mat-card-title>Positiv</mat-card-title>

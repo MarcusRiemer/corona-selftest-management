@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { TestDate, todayTestDate } from '../core-services/test-date';
+import {
+  formatTestDate,
+  TestDate,
+  todayTestDate,
+  toTestDate,
+} from '../core-services/test-date';
 
 export interface CountDescription {
   numTests: number;
@@ -34,11 +39,13 @@ export interface DashboardDescription {
 export class DashboardService {
   constructor(private readonly http: HttpClient) {}
 
-  async fetchDashboard(date?: TestDate): Promise<DashboardDescription> {
-    date = date ?? todayTestDate();
+  async fetchDashboard(date?: Date): Promise<DashboardDescription> {
+    const param = date ? toTestDate(date) : todayTestDate();
 
     return firstValueFrom(
-      this.http.get<DashboardDescription>('api/analysis/dashboard')
+      this.http.get<DashboardDescription>(
+        `api/analysis/dashboard?date=${param}`
+      )
     );
   }
 }

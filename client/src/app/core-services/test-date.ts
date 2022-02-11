@@ -49,7 +49,7 @@ export type TestMonth =
 
 export type TestYear = `${number}`;
 
-export type TestDate = `${TestYear}/${TestMonth}/${TestDay}`;
+export type TestDate = `${TestYear}-${TestMonth}-${TestDay}`;
 
 const isMonth = (m: string | number): m is TestMonth => {
   const i = typeof m === 'string' ? parseInt(m, 10) : m;
@@ -66,15 +66,20 @@ export const formatTestDate = (
   month: TestMonth,
   day: TestDay
 ): TestDate => {
-  return `${year}/${month}/${day}`;
+  return `${year}-${month}-${day}`;
 };
 
 export const parseTestDate = (params: ParamMap): TestDate => {
-  const year = params.get('year');
-  const month = params.get('month')?.padStart(2, '0');
-  const day = params.get('day')?.padStart(2, '0');
+  const whole = params.get('date');
+  if (!whole) {
+    throw new Error(`No "date" in URL: ${JSON.stringify(params)}`);
+  }
+  const split = whole.split('-');
+  const year = split[0];
+  const month = split[1];
+  const day = split[2];
   if (!year || !month || !day) {
-    throw new Error(`Invalid date: "${year}"/"${month}"/"${day}`);
+    throw new Error(`Invalid date: "${year}"-"${month}"-"${day}`);
   }
 
   if (isMonth(month) && isDay(day)) {
@@ -86,13 +91,17 @@ export const parseTestDate = (params: ParamMap): TestDate => {
 
 export const toTestDate = (date: Date): TestDate => {
   const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  const month = ('' + (date.getMonth() + 1)).padStart(2, '0');
+  const day = ('' + date.getDate()).padStart(2, '0');
   if (isMonth(month) && isDay(day)) {
     return formatTestDate(`${year}`, month, day);
   } else {
     throw new Error(`Not valid date object: ${JSON.stringify(date)}`);
   }
+};
+
+export const fromTestDate = (d: TestDate): Date => {
+  return new Date(Date.parse(d));
 };
 
 export const todayTestDate = (): TestDate => {

@@ -57,8 +57,8 @@ public class PersonTestExemption {
         return begin;
     }
 
-    public void setEnd(LocalDate end) {
-        this.end = end;
+    public LocalDate getEnd() {
+        return end;
     }
 
     public enum Reason {

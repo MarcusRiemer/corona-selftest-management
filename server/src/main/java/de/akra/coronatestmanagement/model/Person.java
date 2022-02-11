@@ -55,6 +55,18 @@ public class Person {
         return lastName;
     }
 
+    public Set<PersonTestExemption> getExemptions() {
+        return exemptions;
+    }
+
+    public Set<PersonTest> getTests() {
+        return tests;
+    }
+
+    public boolean isExempt() {
+        return exemptions.size() > 0;
+    }
+
     @Override
     public String toString() {
         return "Person{" +

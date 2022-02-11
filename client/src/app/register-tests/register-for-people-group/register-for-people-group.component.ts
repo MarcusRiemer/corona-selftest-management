@@ -71,12 +71,12 @@ export class RegisterForPeopleGroupComponent implements OnInit, OnDestroy {
     this.isDoingGlobalOperation = true;
 
     const affected = this.data.results.filter(
-      (r) => r.result.state.result === 'UNKNOWN'
+      (r) => r.result?.state.result === 'UNKNOWN'
     );
-    affected.forEach((r) => (r.result.state.result = 'NEGATIVE'));
+    affected.forEach((r) => (r.result!.state.result = 'NEGATIVE'));
 
     const changes: TestStateChangedParams[] = affected.map((t) => ({
-      test: t.result,
+      test: t.result!,
       changedProp: 'result',
     }));
     await this.groupDate.setTestState(...changes);
@@ -88,13 +88,13 @@ export class RegisterForPeopleGroupComponent implements OnInit, OnDestroy {
     this.isDoingGlobalOperation = true;
 
     const affected = this.data.results.filter(
-      (r) => r.result.state.origin === 'UNKNOWN'
+      (r) => r.result?.state.origin === 'UNKNOWN'
     );
 
-    affected.forEach((r) => (r.result.state.origin = origin));
+    affected.forEach((r) => (r.result!.state.origin = origin));
 
     const changes: TestStateChangedParams[] = affected.map((t) => ({
-      test: t.result,
+      test: t.result!,
       changedProp: 'origin',
     }));
     await this.groupDate.setTestState(...changes);
@@ -104,9 +104,11 @@ export class RegisterForPeopleGroupComponent implements OnInit, OnDestroy {
 
   async deleteTestResult(testId: string) {
     if (await this.groupDate.deleteTest(testId)) {
-      this.data.results = this.data.results.filter(
-        (r) => r.result.id !== testId
-      );
+      this.data.results
+        .filter((r) => r.result?.id === testId)
+        .forEach((r) => {
+          r.result = undefined;
+        });
     }
   }
 }

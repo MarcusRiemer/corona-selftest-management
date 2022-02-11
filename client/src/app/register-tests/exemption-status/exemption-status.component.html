@@ -1,0 +1,6 @@
+<span
+  *ngFor="let e of exemptions"
+  [ngClass]="{ invalid: !isCurrent(e) }"
+  title="{{ e.begin }} bis {{ e.end }}"
+  >{{ e.reason }}</span
+>

@@ -6,7 +6,7 @@ import { RegisterForPeopleGroupComponent } from './register-for-people-group/reg
 const routes: Routes = [
   { path: '', component: IndexComponent },
   {
-    path: 'group/:groupId/:year/:month/:day',
+    path: 'group/:groupId/:date',
     component: RegisterForPeopleGroupComponent,
   },
 ];

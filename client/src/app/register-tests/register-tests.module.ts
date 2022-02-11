@@ -13,6 +13,7 @@ import { PeopleGroupListComponent } from './people-group-list/people-group-list.
 import { RegisterForPeopleGroupComponent } from './register-for-people-group/register-for-people-group.component';
 import { SelectTestOriginComponent } from './select-test-origin/select-test-origin.component';
 import { SelectTestResultComponent } from './select-test-result/select-test-result.component';
+import { ExemptionStatusComponent } from './exemption-status/exemption-status.component';
 
 const ANGULAR_MATERIAL_MODULES = [
   MatCardModule,
@@ -28,6 +29,7 @@ const ANGULAR_MATERIAL_MODULES = [
     RegisterForPeopleGroupComponent,
     SelectTestOriginComponent,
     SelectTestResultComponent,
+    ExemptionStatusComponent,
   ],
   imports: [
     CommonModule,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { TestDate } from './test-date';
+import { TestDate, toTestDate } from './test-date';
 import { firstValueFrom } from 'rxjs';
 
 export interface PersonDescription {
@@ -27,9 +27,18 @@ export interface TestResultDescription {
   date: TestDate;
 }
 
+export interface TestExemptionDescription {
+  id: string;
+  reason: 'VACCINATED' | 'RECOVERED' | 'ABSENT' | 'CUSTOM';
+  comment: string;
+  begin: TestDate;
+  end: TestDate;
+}
+
 export interface PersonTestResultDescription {
   person: PersonDescription;
-  result: TestResultDescription;
+  result?: TestResultDescription;
+  exemptions: TestExemptionDescription[];
 }
 
 export interface TestResultsGroupListDescription {
@@ -49,18 +58,29 @@ export interface TestStateChangedParams {
 export class GroupDataService {
   constructor(private readonly http: HttpClient) {}
 
-  async fetchAvailableGroups(): Promise<PeopleGroupListDescription[]> {
+  async fetchAvailableGroups(
+    date: Date
+  ): Promise<PeopleGroupListDescription[]> {
+    const formatted = toTestDate(date);
+    console.log('Requesting groups for', formatted);
     return firstValueFrom(
-      this.http.get<PeopleGroupListDescription[]>('api/tests/groupsToday')
+      this.http.get<PeopleGroupListDescription[]>(
+        `api/tests/groups?date=${formatted}`
+      )
     );
   }
 
   async createGroupTestSeries(
     groupId: string,
-    testDate: TestDate
+    testDate: TestDate,
+    testAll: boolean
   ): Promise<boolean> {
     return firstValueFrom(
-      this.http.post<boolean>('api/tests/createForGroup', { groupId, testDate })
+      this.http.post<boolean>('api/tests/createForGroup', {
+        groupId,
+        testDate,
+        testAll,
+      })
     );
   }
 
